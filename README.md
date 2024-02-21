@@ -1,6 +1,6 @@
 # Quartz.NET Example App
 
-# ####################### IN PROGRESS #######################
+# ------------------------------ IN PROGRESS ------------------------------ 
 
 This example app demonstrates the usage of JobFactory, JobListener, and other key components in Quartz.NET.
 
