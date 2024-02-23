@@ -33,4 +33,10 @@ There are 3 + 1 types of jobs to demonstrate various mechanisms:
 3. The most advanced one demonstrates the scenario when you need some data before initialization.
 4. The last one is ErrorJob. If an initialization fails, most of the time Quartz can't handle it, so you have to add this error job or do nothing.
 
+There are two part that is crucial one is the JobFactory that initialize the jobs that extends the IJob interface.
+
+The other one is the JobListener where I start an other job, if that is comes from the parameters.
+
+You can use MergedJobDataMap most of this features, but sometimes that is not enough, so that is why I wrote this example program.
+
 If you notice any mistakes or have any suggestions, please feel free to share them with me.
