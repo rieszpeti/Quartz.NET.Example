@@ -44,7 +44,10 @@ internal class JobListener : IJobListener
 
         if (successNextJobName && 
             successNextJobGroup && 
-            successNextJobType)
+            successNextJobType &&
+            !string.IsNullOrEmpty(nextJobName) &&
+            !string.IsNullOrEmpty(nextJobGroup) &&
+            !string.IsNullOrEmpty(nextJobType))
         {
             Type? jobType = Type.GetType("Quartz.NET.Example.Jobs." + nextJobType);
 
@@ -63,7 +66,7 @@ internal class JobListener : IJobListener
                                              .StartNow()
                                              .Build();
 
-            context.Scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
+            context.Scheduler.ScheduleJob(job, trigger, cancellationToken).GetAwaiter().GetResult();
         }
 
         return Task.CompletedTask;
