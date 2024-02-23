@@ -37,6 +37,6 @@ There are two part that is crucial one is the JobFactory that initialize the job
 
 The other one is the JobListener where I start an other job, if that is comes from the parameters.
 
-You can use MergedJobDataMap most of this features, but sometimes that is not enough, so that is why I wrote this example program.
+You can use JobDataMap most of this features, but sometimes that is not enough, because it is working like a Dictionary so that is why I wrote this example program.
 
 If you notice any mistakes or have any suggestions, please feel free to share them with me.
