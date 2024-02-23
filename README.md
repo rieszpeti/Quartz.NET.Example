@@ -39,4 +39,6 @@ The other one is the JobListener where I start an other job, if that is comes fr
 
 You can use JobDataMap most of this features, but sometimes that is not enough, because it is working like a Dictionary so that is why I wrote this example program.
 
+I added one to one relation between QrtzJobDetail - JobConfig and JobConfig - NextJobConfig
+
 If you notice any mistakes or have any suggestions, please feel free to share them with me.
