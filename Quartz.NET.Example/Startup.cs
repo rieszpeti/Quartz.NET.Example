@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz.Impl.AdoJobStore;
@@ -13,6 +14,8 @@ namespace Quartz.NET.Example;
 
 internal static class Startup
 {
+    private static string ConnectionString { get; set; } = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Quartz.NET.Example;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;";
+
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
         .ConfigureServices((hostContext, services) =>
@@ -87,7 +90,7 @@ internal static class Startup
             persistentStore.UseSqlServer(sqlServerOptions =>
             {
                 sqlServerOptions.UseDriverDelegate<SqlServerDelegate>();
-                sqlServerOptions.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Quartz.NET.Example;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;";
+                sqlServerOptions.ConnectionString = ConnectionString;
                 sqlServerOptions.TablePrefix = "QRTZ_";
             });
 
@@ -112,7 +115,7 @@ internal static class Startup
 
     private static void RegisterServices(IServiceCollection services)
     {
-        services.AddDbContext<QuartzNetExampleContext>();
+        services.AddDbContext<QuartzNetExampleContext>(options => options.UseSqlServer(ConnectionString));
 
         // Repository
         services.AddTransient<Repo>();
