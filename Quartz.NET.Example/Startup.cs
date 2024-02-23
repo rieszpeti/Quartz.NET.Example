@@ -3,11 +3,14 @@ using Microsoft.Extensions.Hosting;
 using Quartz.Impl.AdoJobStore;
 using Quartz.NET.Example.JobHelpers;
 using Quartz.NET.Example.Jobs;
+using Quartz.NET.Example.Models;
 using Quartz.NET.Example.Quartz.Components;
 using Quartz.NET.Example.Repository;
 using Quartz.NET.Example.Services;
+using Quartz.Plugin.Interrupt;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,17 +88,18 @@ internal static class Startup
                     quartzOptions.StartDelay = TimeSpan.FromSeconds(1);
                 });
 
+                q.AddJobListener<JobListener>();
 #if DEBUG
                 var jobName = "TEST";
+                var triggerName = "TriggerName";
 
                 // Add job from program for test
-                StartTestJob(q, typeof(DummyJob), jobName, "TriggerName");
 
-                //StartTestJob(q, typeof(SomeJob), "TEST", "TriggerName");
+                //StartTestJob(q, typeof(DummyJob), jobName, triggerName);
 
-                //StartTestJob(q, typeof(SomeJobWithNextJob), "TEST", "TriggerName");
+                //StartTestJob(q, typeof(SomeJob), jobName, triggerName);
 
-                AddConfigToDB(schedName, jobName);
+                StartTestJob(q, typeof(SomeJobWithNextJob), jobName, triggerName);
 #endif
             });
 
@@ -115,6 +119,11 @@ internal static class Startup
 
             // Services
             services.AddScoped<SomeService>();
+
+            // add because of migration
+            // Models
+            services.AddTransient<JobConfig>();
+            services.AddTransient<NextJobConfig>();
         });
 
     private static void StartTestJob(IServiceCollectionQuartzConfigurator q, Type jobType, string jobName, string triggerName)
@@ -127,16 +136,12 @@ internal static class Startup
         q.AddTrigger(t => t.ForJob(jobKey)
                            .WithIdentity(triggerName)
                            .StartNow());
-    }
 
-    /// <summary>
-    /// This is just for demonstration
-    /// it is not a nice way to add data at startup
-    /// </summary>
-    private static void AddConfigToDB(string schedName, string jobName, string jobGroup = "DEFAULT")
-    {
-        var repo = new Repo(new QuartzNetExampleContext());
-
-        repo.AddAtStartup(schedName, jobName, jobGroup);
+        //q.ScheduleJob<SomeJobWithNextJob>(
+        //    triggerConfigurator => triggerConfigurator
+        //        .WithIdentity(triggerName)
+        //        .StartNow(),
+        //    jobConfigurator => jobConfigurator
+        //        .WithIdentity(jobName));
     }
 }

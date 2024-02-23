@@ -21,7 +21,12 @@ namespace Quartz.NET.Example.Jobs
         {
 
             Console.WriteLine("Add next job.");
-            _nextJobCreator.AddNextJob(context);
+
+            if (_nextJobCreator.CheckNextJob())
+            {
+                _nextJobCreator.AddNextJob(context);
+            }
+
             return Task.CompletedTask;
         }
     }

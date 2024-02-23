@@ -10,7 +10,7 @@ internal class DummyJob : IJob
 {
     public Task Execute(IJobExecutionContext context)
     {
-        //Do nothing
+        Console.WriteLine("I am dummy.");
         return Task.CompletedTask;
     }
 }

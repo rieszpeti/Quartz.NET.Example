@@ -18,37 +18,38 @@ internal class Repo(QuartzNetExampleContext ctx)
 
     public void AddAtStartup(string schedName, string jobName, string jobGroup = "DEFAULT")
     {
-        if (!_ctx.JobConfigs.Any(j => j.JobName == "SomeName1"))
+        var isJobConfExists = !_ctx.JobConfigs.Any(j => j.SchedName == schedName &&
+                                                        j.JobName == jobName &&
+                                                        j.JobGroup == jobGroup);
+
+        if (isJobConfExists)
         {
-            var jobConfig = new JobConfig(
-                schedName,
-                jobName,
-                "SomeName1",
-                jobGroup);
+            var jobConfig = new JobConfig
+            {
+                SchedName = schedName,
+                JobName = jobName,
+                JobGroup = jobGroup,
+                Name = "SomeName1"
+            };
 
             _ctx.JobConfigs.Add(jobConfig);
         }
 
-        if (!_ctx.JobConfigs.Any(j => j.JobName == "SomeName2"))
-        {
-            var jobConfig = new JobConfig(
-                schedName,
-                jobName,
-                "SomeName2",
-                jobGroup);
+        var isNextJConfExists = !_ctx.NextJobConfigs.Any(nj => nj.SchedName == schedName &&
+                                                               nj.JobName == jobName &&
+                                                               nj.JobGroup == jobGroup);
 
-            _ctx.JobConfigs.Add(jobConfig);
-        }
-
-        if (!_ctx.NextJobConfigs.Any(nj => nj.JobName == "SomeName1" && nj.NextJobName == "DummyJob"))
+        if (isNextJConfExists)
         {
-            var nextJobConfig = new NextJobConfig(
-                schedName,
-                jobName,
-                jobName + "NextJobName",
-                "DummyJob",
-                jobGroup,
-                jobGroup);
+            var nextJobConfig = new NextJobConfig
+            {
+                SchedName = schedName,
+                JobName = jobName,
+                JobGroup = jobGroup,
+                SpecialProperty = "Special",
+                NextJobName = jobName + "NextJobName",
+                NextJobType = "DummyJob"
+            };
 
             _ctx.NextJobConfigs.Add(nextJobConfig);
         }

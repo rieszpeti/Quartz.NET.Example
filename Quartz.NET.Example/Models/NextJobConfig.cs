@@ -32,7 +32,7 @@ public class NextJobConfig
     }
 
     public NextJobConfig(
-        string schedName, string jobName, string nextJobName, string nextJobType, 
+        string schedName, string jobName, string nextJobName, string nextJobType, string specialProperty,
         string jobGroup = "DEFAULT", string nextJobGroup = "DEFAULT")
     {
         SchedName = schedName;
@@ -41,5 +41,8 @@ public class NextJobConfig
         NextJobName = nextJobName;
         NextJobGroup = nextJobGroup;
         NextJobType = nextJobType;
+        SpecialProperty = specialProperty;
+        JobGroup = JobGroup;
+        NextJobGroup = nextJobGroup;
     }
 }

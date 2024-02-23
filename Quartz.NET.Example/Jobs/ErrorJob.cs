@@ -11,12 +11,6 @@ namespace Quartz.NET.Example.Jobs
     /// </summary>
     internal class ErrorJob : IJob
     {
-        public ErrorJob(Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            // You can log here or in the execute if the jobfactory couldn't make the job
-        }
-
         public Task Execute(IJobExecutionContext context)
         {
             Console.WriteLine($"Couldn't create job with name: {context.JobDetail.Key.Name}");

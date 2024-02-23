@@ -1,4 +1,5 @@
-﻿using Quartz.Util;
+﻿using Quartz.NET.Example.JobHelpers;
+using Quartz.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,13 +36,15 @@ internal class JobListener : IJobListener
     {
         var dataMap = context.MergedJobDataMap;
 
-        string? nextJobName = dataMap.GetString("NextJobName");
-        string? nextJobGroup = dataMap.GetString("NextJobGroup");
-        string? nextJobType = dataMap.GetString("NextJobType");
+        bool successNextJobName = dataMap.TryGetString(NextJobCreator.NextJobName, out string? nextJobName);
 
-        if (!nextJobName.IsNullOrWhiteSpace() &&
-            !nextJobGroup.IsNullOrWhiteSpace() &&
-            !nextJobType.IsNullOrWhiteSpace())
+        bool successNextJobGroup = dataMap.TryGetString(NextJobCreator.NextJobGroup, out string? nextJobGroup);
+
+        bool successNextJobType = dataMap.TryGetString(NextJobCreator.NextJobType, out string? nextJobType);
+
+        if (successNextJobName && 
+            successNextJobGroup && 
+            successNextJobType)
         {
             Type? jobType = Type.GetType("Quartz.NET.Example.Jobs." + nextJobType);
 
@@ -50,24 +53,17 @@ internal class JobListener : IJobListener
                 throw new Exception("Couldn't create job.");
             }
 
-            var jobKey = new JobKey(nextJobName, nextJobGroup);
+            IJobDetail job = JobBuilder.Create(jobType)
+                                       .WithIdentity(nextJobName, nextJobGroup)
+                                       .Build();
 
-            var jobDetail = context.Scheduler.GetJobDetail(jobKey).GetAwaiter().GetResult();
+            ITrigger trigger = TriggerBuilder.Create()
+                                             .ForJob(job)
+                                             .WithIdentity(nextJobName + "SimpleTrigger", nextJobGroup + "SimpleTriggerGroup")
+                                             .StartNow()
+                                             .Build();
 
-            if (jobDetail is null)
-            {
-                throw new Exception("Couldn't create job.");
-            }
-
-            var trigger = TriggerBuilder.Create()
-                .WithIdentity(nextJobName + "SimpleTrigger", nextJobGroup + "SimpleTriggerGroup")
-                .ForJob(jobDetail)
-                .StartNow()
-                .Build();
-
-            //Finally schedule job
-            context.Scheduler.ScheduleJob(trigger).Wait();
-
+            context.Scheduler.ScheduleJob(job, trigger).GetAwaiter().GetResult();
         }
 
         return Task.CompletedTask;

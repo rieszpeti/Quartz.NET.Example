@@ -24,16 +24,18 @@ internal class NextJobCreator
         _config = nextJobConfig;
     }
 
-    public bool CheckNextJob(string nextJobName, string nextJobType, string nextJobGroup = "DEFAULT")
+    public bool CheckNextJob()
     {
-        return !nextJobName.IsNullOrWhiteSpace() || !nextJobType.IsNullOrWhiteSpace() || !nextJobGroup.IsNullOrWhiteSpace();
+        return !_config.NextJobName.IsNullOrWhiteSpace() || 
+               !_config.NextJobType.IsNullOrWhiteSpace() || 
+               !_config.NextJobGroup.IsNullOrWhiteSpace();
     }
 
     public void AddNextJob(IJobExecutionContext context)
     {
         //This MergedJobDataMap is a key value pair collection
         context.MergedJobDataMap.Put(NextJobName, _config.NextJobName);
-        context.MergedJobDataMap.Put(NextJobName, _config.NextJobGroup);
-        context.MergedJobDataMap.Put(NextJobName, _config.NextJobType);
+        context.MergedJobDataMap.Put(NextJobGroup, _config.NextJobGroup);
+        context.MergedJobDataMap.Put(NextJobType, _config.NextJobType);
     }
 }

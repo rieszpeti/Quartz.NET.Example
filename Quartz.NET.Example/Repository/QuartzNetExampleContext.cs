@@ -48,7 +48,8 @@ public partial class QuartzNetExampleContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Quartz.NET.Example;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;");
+        => optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Quartz.NET.Example;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;")
+          .UseLazyLoadingProxies();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,21 +59,36 @@ public partial class QuartzNetExampleContext : DbContext
         {
             entity.HasKey(e => new { e.SchedName, e.JobName, e.JobGroup });
 
-            entity.HasOne<QrtzJobDetail>()
+            entity.HasOne(e => e.QrtzJobDetail)
                   .WithOne(e => e.JobConfig)
                   .HasForeignKey<JobConfig>(e => new { e.SchedName, e.JobName, e.JobGroup })
                   .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.Property(e => e.SchedName)
+                .HasMaxLength(120);
+            entity.Property(e => e.JobName)
+                .HasMaxLength(150);
+            entity.Property(e => e.JobGroup)
+                .HasMaxLength(150);
         });
 
         modelBuilder.Entity<NextJobConfig>(entity =>
         {
             entity.HasKey(e => new { e.SchedName, e.JobName, e.JobGroup });
 
-            entity.HasOne<JobConfig>()
-                  .WithOne(e => e.NextJobConfig)
-                  .HasForeignKey<JobConfig>(e => new { e.SchedName, e.JobName, e.JobGroup })
-                  .OnDelete(DeleteBehavior.ClientSetNull);
+            entity.HasOne(e => e.JobConfig)
+              .WithOne(e => e.NextJobConfig)
+              .HasForeignKey<NextJobConfig>(e => new { e.SchedName, e.JobName, e.JobGroup })
+              .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.Property(e => e.SchedName)
+                .HasMaxLength(120);
+            entity.Property(e => e.JobName)
+                .HasMaxLength(150);
+            entity.Property(e => e.JobGroup)
+                .HasMaxLength(150);
         });
+
 
         #region Quartz
 
