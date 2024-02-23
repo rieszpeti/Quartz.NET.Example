@@ -1,6 +1,6 @@
 # Quartz.NET Example App
 
-This example app demonstrates the usage of JobFactory, JobListener, and other key components in Quartz.NET.
+This example app demonstrates the usage of JobFactory, JobListener, EF Core in Quartz.NET.
 
 ## Overview
 
