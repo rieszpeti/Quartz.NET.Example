@@ -11,7 +11,6 @@ namespace Quartz.NET.Example.Jobs;
 internal class SomeJob : IJob
 {
     private readonly SomeService _someService;
-    private readonly NextJobCreator? _nextJobCreator;
 
     public SomeJob(SomeService someService)
     {
@@ -23,7 +22,6 @@ internal class SomeJob : IJob
     public SomeJob(SomeService someService, NextJobCreator nextJobCreator)
     {
         _someService = someService;
-        _nextJobCreator = nextJobCreator;
 
         Console.WriteLine("Doing something before calling the execute");
     }
@@ -31,11 +29,6 @@ internal class SomeJob : IJob
     public Task Execute(IJobExecutionContext context)
     {
         _someService.DoSomething();
-
-        if (true)
-        {
-
-        }
 
         return Task.CompletedTask;
     }

@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Quartz.NET.Example.Jobs
 {
-    internal class ExceptionJob : IJob
+    /// <summary>
+    /// If the jobCreation fails then this will be instanciated
+    /// </summary>
+    internal class ErrorJob : IJob
     {
-        public ExceptionJob(Exception ex)
+        public ErrorJob(Exception ex)
         {
             Console.WriteLine(ex.Message);
             // You can log here or in the execute if the jobfactory couldn't make the job
@@ -16,6 +19,8 @@ namespace Quartz.NET.Example.Jobs
 
         public Task Execute(IJobExecutionContext context)
         {
+            Console.WriteLine($"Couldn't create job with name: {context.JobDetail.Key.Name}");
+
             return Task.CompletedTask;
         }
     }

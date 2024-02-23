@@ -40,7 +40,7 @@ internal class JobFactory(IServiceProvider serviceProvider) : IJobFactory
         }
         catch (Exception ex)
         {
-            return new ExceptionJob(ex);
+            return new ErrorJob(ex);
         }
     }
 
