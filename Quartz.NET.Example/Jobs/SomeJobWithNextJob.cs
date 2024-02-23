@@ -8,14 +8,9 @@ using System.Threading.Tasks;
 
 namespace Quartz.NET.Example.Jobs
 {
-    internal class SomeJobWithNextJob : IJob
+    internal class SomeJobWithNextJob(NextJobCreator nextJobCreator) : IJob
     {
-        private readonly NextJobCreator _nextJobCreator;
-
-        public SomeJobWithNextJob(NextJobCreator nextJobCreator)
-        {
-            _nextJobCreator = nextJobCreator;
-        }
+        private readonly NextJobCreator _nextJobCreator = nextJobCreator;
 
         public Task Execute(IJobExecutionContext context)
         {

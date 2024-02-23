@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Quartz.NET.Example.JobHelpers;
 
-internal class NextJobCreator
+internal class NextJobCreator(NextJobConfig nextJobConfig)
 {
     /// <summary>
     /// This is just for the key value pairs
@@ -17,12 +17,7 @@ internal class NextJobCreator
     public static readonly string NextJobGroup = "NextJobGroup";
     public static readonly string NextJobType = "NextJobType";
 
-    private readonly NextJobConfig _config;
-
-    public NextJobCreator(NextJobConfig nextJobConfig)
-    {
-        _config = nextJobConfig;
-    }
+    private readonly NextJobConfig _config = nextJobConfig;
 
     public bool CheckNextJob()
     {

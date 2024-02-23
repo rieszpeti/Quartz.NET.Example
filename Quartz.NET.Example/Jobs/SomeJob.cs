@@ -19,13 +19,6 @@ internal class SomeJob : IJob
         Console.WriteLine("Doing something before calling the execute");
     }
 
-    public SomeJob(SomeService someService, NextJobCreator nextJobCreator)
-    {
-        _someService = someService;
-
-        Console.WriteLine("Doing something before calling the execute");
-    }
-
     public Task Execute(IJobExecutionContext context)
     {
         _someService.DoSomething();
