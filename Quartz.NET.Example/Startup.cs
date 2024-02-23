@@ -41,6 +41,8 @@ internal static class Startup
             ConfigurePersistentStore(q);
 
             // Add test jobs if in debug mode
+            // you can create and trigger jobs from here,
+            // of course there are other ways
 #if DEBUG
             var jobName = "TEST";
             var triggerName = "TriggerName";
