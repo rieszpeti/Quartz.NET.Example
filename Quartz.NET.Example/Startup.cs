@@ -17,10 +17,8 @@ internal static class Startup
         Host.CreateDefaultBuilder(args)
         .ConfigureServices((hostContext, services) =>
         {
-            // Configuration for Quartz
             ConfigureQuartz(hostContext.Configuration, services);
 
-            // Register services
             RegisterServices(services);
         });
 
